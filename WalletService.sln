@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35514.174 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FC552162-9F08-4869-A0B9-90C1E64A9F50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletService.Api", "src\WalletService.Api\WalletService.Api.csproj", "{630DD666-E208-46A6-9416-D83A9A6F7375}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletService.Domain", "src\WalletService.Domain\WalletService.Domain.csproj", "{E843251F-3787-44FC-983E-85608FFD3B9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletService.Infrastructure", "src\WalletService.Infrastructure\WalletService.Infrastructure.csproj", "{02334A75-93F0-4D45-B1AF-9F13A702B284}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E9E56488-AB37-4166-BD48-F8DE81EDF411}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletService.Infrastructure.Tests", "tests\WalletService.Infrastructure.Tests\WalletService.Infrastructure.Tests.csproj", "{0DCE7DD9-F38C-4BF0-8567-0136FFEDA171}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletService.Api.Tests", "tests\WalletService.Api.Tests\WalletService.Api.Tests.csproj", "{2DDF3DF0-D2C5-4697-ADE0-ABDB39E4D58D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletService.Domain.Tests", "tests\WalletService.Domain.Tests\WalletService.Domain.Tests.csproj", "{9D38A8E7-2E11-4A5B-A34A-738900BDEA60}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{630DD666-E208-46A6-9416-D83A9A6F7375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{630DD666-E208-46A6-9416-D83A9A6F7375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{630DD666-E208-46A6-9416-D83A9A6F7375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{630DD666-E208-46A6-9416-D83A9A6F7375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E843251F-3787-44FC-983E-85608FFD3B9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E843251F-3787-44FC-983E-85608FFD3B9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E843251F-3787-44FC-983E-85608FFD3B9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E843251F-3787-44FC-983E-85608FFD3B9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02334A75-93F0-4D45-B1AF-9F13A702B284}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02334A75-93F0-4D45-B1AF-9F13A702B284}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02334A75-93F0-4D45-B1AF-9F13A702B284}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02334A75-93F0-4D45-B1AF-9F13A702B284}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DCE7DD9-F38C-4BF0-8567-0136FFEDA171}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DCE7DD9-F38C-4BF0-8567-0136FFEDA171}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DCE7DD9-F38C-4BF0-8567-0136FFEDA171}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DCE7DD9-F38C-4BF0-8567-0136FFEDA171}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DDF3DF0-D2C5-4697-ADE0-ABDB39E4D58D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DDF3DF0-D2C5-4697-ADE0-ABDB39E4D58D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DDF3DF0-D2C5-4697-ADE0-ABDB39E4D58D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DDF3DF0-D2C5-4697-ADE0-ABDB39E4D58D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D38A8E7-2E11-4A5B-A34A-738900BDEA60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D38A8E7-2E11-4A5B-A34A-738900BDEA60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D38A8E7-2E11-4A5B-A34A-738900BDEA60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D38A8E7-2E11-4A5B-A34A-738900BDEA60}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{630DD666-E208-46A6-9416-D83A9A6F7375} = {FC552162-9F08-4869-A0B9-90C1E64A9F50}
+		{E843251F-3787-44FC-983E-85608FFD3B9E} = {FC552162-9F08-4869-A0B9-90C1E64A9F50}
+		{02334A75-93F0-4D45-B1AF-9F13A702B284} = {FC552162-9F08-4869-A0B9-90C1E64A9F50}
+		{0DCE7DD9-F38C-4BF0-8567-0136FFEDA171} = {E9E56488-AB37-4166-BD48-F8DE81EDF411}
+		{2DDF3DF0-D2C5-4697-ADE0-ABDB39E4D58D} = {E9E56488-AB37-4166-BD48-F8DE81EDF411}
+		{9D38A8E7-2E11-4A5B-A34A-738900BDEA60} = {E9E56488-AB37-4166-BD48-F8DE81EDF411}
+	EndGlobalSection
+EndGlobal
