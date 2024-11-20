@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
+    <ProjectReference Include="..\..\src\WalletService.Domain\WalletService.Domain.csproj" />
   </ItemGroup>
 
 </Project>
