@@ -1,11 +1,11 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using WalletService.Domain.Models.Enums;
 
 namespace WalletService.Domain.Models;
 
 public class Wallet
 {
+    private readonly int _id;
     private readonly string _walletName;
     private readonly WalletType _walletType;
     private readonly AccountScheme _accountScheme;
@@ -26,7 +26,7 @@ public class Wallet
         _isActive = true;
     }
     [Key]
-    public int WalletId { get; set; }
+    public int Id => _id;
     public string WalletName => _walletName;
     public string AccountNumber => _accountNumber;
     public WalletType WalletType => _walletType;
