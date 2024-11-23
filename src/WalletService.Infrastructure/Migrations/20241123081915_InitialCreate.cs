@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WalletService.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDbCreation : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,7 +22,7 @@ namespace WalletService.Infrastructure.Migrations
                     WalletType = table.Column<int>(type: "int", nullable: false),
                     AccountScheme = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Owner = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Owner = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -30,6 +30,11 @@ namespace WalletService.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Wallet", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Wallet_Owner",
+                table: "Wallet",
+                column: "Owner");
         }
 
         /// <inheritdoc />

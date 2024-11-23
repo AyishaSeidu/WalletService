@@ -12,8 +12,8 @@ using WalletService.Infrastructure.DataContext;
 namespace WalletService.Infrastructure.Migrations
 {
     [DbContext(typeof(WalletServiceContext))]
-    [Migration("20241122001501_InitialDbCreation")]
-    partial class InitialDbCreation
+    [Migration("20241123081915_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,7 @@ namespace WalletService.Infrastructure.Migrations
 
                     b.Property<string>("Owner")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -61,6 +61,8 @@ namespace WalletService.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Owner");
 
                     b.ToTable("Wallet", (string)null);
                 });

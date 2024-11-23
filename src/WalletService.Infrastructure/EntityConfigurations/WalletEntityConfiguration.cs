@@ -13,7 +13,7 @@ internal class WalletEntityConfiguration : IEntityTypeConfiguration<Wallet>
 {
     public void Configure(EntityTypeBuilder<Wallet> builder)
     {
-        builder.ToTable(nameof(Wallet));
+        builder.ToTable(nameof(Wallet)).HasIndex(w=> w.Owner);
 
         builder.Property(p => p.Id)
             .ValueGeneratedOnAdd();

@@ -45,7 +45,7 @@ namespace WalletService.Infrastructure.Migrations
 
                     b.Property<string>("Owner")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -58,6 +58,8 @@ namespace WalletService.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Owner");
 
                     b.ToTable("Wallet", (string)null);
                 });
