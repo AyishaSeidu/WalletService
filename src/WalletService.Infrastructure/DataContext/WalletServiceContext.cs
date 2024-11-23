@@ -4,9 +4,14 @@ using WalletService.Infrastructure.EntityConfigurations;
 
 namespace WalletService.Infrastructure.DataContext;
 
-public class WalletServiceContext(DbContextOptions<WalletServiceContext> dbContextOptions) : DbContext(dbContextOptions)
+public class WalletServiceContext(DbContextOptions<WalletServiceContext> dbContextOptions) : DbContext(dbContextOptions), IWalletServiceContext
 {
     public DbSet<Wallet> Wallets { get; set; }
+
+    public async Task SaveChangesAsync()
+    {
+        await base.SaveChangesAsync();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

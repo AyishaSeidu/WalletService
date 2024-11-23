@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var writeConnectionString = builder.Configuration.GetConnectionString("WalletServiceDbWriteConnectionString");
 ArgumentException.ThrowIfNullOrWhiteSpace(writeConnectionString, nameof(writeConnectionString));
-builder.Services.AddDbContext<WalletServiceContext>(options =>
+builder.Services.AddDbContext<IWalletServiceContext, WalletServiceContext>(options =>
 {
     options.UseSqlServer(writeConnectionString);
 });
