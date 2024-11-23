@@ -7,10 +7,7 @@ public class WalletReadDto
     public int Id { get; set; }
     public required string WalletName { get; set; }
     public required string AccountNumber { get; set; }
-
     public WalletType WalletType { get; set; }
-
     public AccountScheme AccountScheme { get; set; }
-
-    public required string Owner { get; set; }
+    public required string OwnerPhoneNumber { get; set; }
 }
