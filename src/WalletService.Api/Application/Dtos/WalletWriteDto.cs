@@ -10,6 +10,5 @@ public class WalletWriteDto
     public WalletType WalletType {  get; set; }
     public AccountScheme AccountScheme {  get; set; }
 
-    [RegularExpression(@"^0\d{9}$", ErrorMessage = "The number must be 10 digits, and must start with 0")]
-    public required string OwnerOwnerPhoneNumber {  get; set; }
+    public required string OwnerPhoneNumber {  get; set; }
 }
