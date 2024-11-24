@@ -1,6 +1,6 @@
 ﻿namespace WalletService.Domain.Models.Enums;
 
-public enum WalletType
+public enum InternalWalletType
 {
     MOMO,
     CARD

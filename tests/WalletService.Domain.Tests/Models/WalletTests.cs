@@ -15,13 +15,13 @@ public class WalletTests
         const string walletOwner = "0507157798";
 
         // Act
-        var result = new Wallet(walletName, acountNumber, WalletType.MOMO, InternalAccountScheme.VODAFONE, walletOwner);
+        var result = new Wallet(walletName, acountNumber, InternalWalletType.MOMO, InternalAccountScheme.VODAFONE, walletOwner);
 
         // Assert
         Assert.Equal(acountNumber, result.AccountNumber);
         Assert.Equal(walletName, result.WalletName);
         Assert.Equal(walletOwner, result.Owner);
-        Assert.Equal(WalletType.MOMO, result.WalletType);
+        Assert.Equal(InternalWalletType.MOMO, result.WalletType);
         Assert.Equal(InternalAccountScheme.VODAFONE, result.AccountScheme);
         Assert.True(result.IsActive);
         Assert.Null(result.UpdatedAt);
@@ -37,14 +37,14 @@ public class WalletTests
 
 
         // Act
-        var result = new Wallet(walletName, acountNumber, WalletType.MOMO, InternalAccountScheme.VODAFONE, walletOwner);
+        var result = new Wallet(walletName, acountNumber, InternalWalletType.MOMO, InternalAccountScheme.VODAFONE, walletOwner);
         result.DeactivateWallet();
 
         // Assert
         Assert.Equal(acountNumber, result.AccountNumber);
         Assert.Equal(walletName, result.WalletName);
         Assert.Equal(walletOwner, result.Owner);
-        Assert.Equal(WalletType.MOMO, result.WalletType);
+        Assert.Equal(InternalWalletType.MOMO, result.WalletType);
         Assert.Equal(InternalAccountScheme.VODAFONE, result.AccountScheme);
         Assert.False(result.IsActive);
         Assert.NotNull(result.UpdatedAt);
