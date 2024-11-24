@@ -1,6 +1,6 @@
 ﻿namespace WalletService.Domain.Models.Enums;
 
-public enum AccountScheme
+public enum InternalAccountScheme
 {
     VISA,
     MASTERCARD,

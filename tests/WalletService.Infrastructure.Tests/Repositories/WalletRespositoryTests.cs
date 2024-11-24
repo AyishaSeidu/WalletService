@@ -16,10 +16,10 @@ public class WalletRespositoryTests
         // Arrage
         var existingWallets = new List<Wallet>()
         {
-            new("Frodo's Mtn", "0244123456", WalletType.MOMO, AccountScheme.MTN, "0244123456"),
-            new("Frodo's Voda", "0244123456", WalletType.MOMO, AccountScheme.VODAFONE, "0204123456"),
-            new("Frodo's Mastercard", "123456", WalletType.CARD, AccountScheme.MASTERCARD, "0244123456"),
-            new("Bilbo's Mastercard", "567890", WalletType.CARD, AccountScheme.MASTERCARD, "0240123789")
+            new("Frodo's Mtn", "0244123456", WalletType.MOMO, InternalAccountScheme.MTN, "0244123456"),
+            new("Frodo's Voda", "0244123456", WalletType.MOMO, InternalAccountScheme.VODAFONE, "0204123456"),
+            new("Frodo's Mastercard", "123456", WalletType.CARD, InternalAccountScheme.MASTERCARD, "0244123456"),
+            new("Bilbo's Mastercard", "567890", WalletType.CARD, InternalAccountScheme.MASTERCARD, "0240123789")
         }.AsQueryable().BuildMockDbSet();
 
         var contextMock = new Mock<IWalletServiceContext>();
@@ -29,7 +29,7 @@ public class WalletRespositoryTests
 
         var repository = CreateWalletRepository(contextMock);
 
-        var newWallet = new Wallet("Frodo's Visa", "192837", WalletType.CARD, AccountScheme.VISA, "0244123456");
+        var newWallet = new Wallet("Frodo's Visa", "192837", WalletType.CARD, InternalAccountScheme.VISA, "0244123456");
         // Act
         var result = await repository.AddWallet(newWallet);
 
@@ -43,11 +43,11 @@ public class WalletRespositoryTests
         // Arrage
         var existingWallets = new List<Wallet>()
         {
-            new("Frodo's Mtn", "0244123456", WalletType.MOMO, AccountScheme.MTN, "0244123456"),
-            new("Frodo's Voda", "0244123456", WalletType.MOMO, AccountScheme.VODAFONE, "0244123456"),
-            new("Frodo's Mastercard", "123456", WalletType.CARD, AccountScheme.MASTERCARD, "0244123456"),
-            new("Frodo's AirtelTigo", "0266123456", WalletType.MOMO, AccountScheme.AIRTELTIGO, "0244123456"),
-            new("Frodo's other AirtelTigo", "0267123456", WalletType.MOMO, AccountScheme.AIRTELTIGO, "0244123456")
+            new("Frodo's Mtn", "0244123456", WalletType.MOMO, InternalAccountScheme.MTN, "0244123456"),
+            new("Frodo's Voda", "0244123456", WalletType.MOMO, InternalAccountScheme.VODAFONE, "0244123456"),
+            new("Frodo's Mastercard", "123456", WalletType.CARD, InternalAccountScheme.MASTERCARD, "0244123456"),
+            new("Frodo's AirtelTigo", "0266123456", WalletType.MOMO, InternalAccountScheme.AIRTELTIGO, "0244123456"),
+            new("Frodo's other AirtelTigo", "0267123456", WalletType.MOMO, InternalAccountScheme.AIRTELTIGO, "0244123456")
         }.AsQueryable().BuildMockDbSet();
 
         var contextMock = new Mock<IWalletServiceContext>();
@@ -55,7 +55,7 @@ public class WalletRespositoryTests
 
         var repository = CreateWalletRepository(contextMock);
 
-        var newWallet = new Wallet("Frodo's Visa", "192837", WalletType.CARD, AccountScheme.VISA, "0244123456");
+        var newWallet = new Wallet("Frodo's Visa", "192837", WalletType.CARD, InternalAccountScheme.VISA, "0244123456");
 
         /// Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(async () => await repository.AddWallet(newWallet));
@@ -68,12 +68,12 @@ public class WalletRespositoryTests
         // Arrage
         var wallets = new List<Wallet>()
         {
-            new("Frodo's Mtn", "0244123456", WalletType.MOMO, AccountScheme.MTN, "0244123456"),
-            new("Frodo's Voda", "0244123456", WalletType.MOMO, AccountScheme.VODAFONE, "0244123456"),
-            new("Frodo's Mastercard", "123456", WalletType.CARD, AccountScheme.MASTERCARD, "0244123456"),
-            new("Frodo's AirtelTigo", "0266123456", WalletType.MOMO, AccountScheme.AIRTELTIGO, "0244123456"),
-            new("Frodo's other AirtelTigo", "0267123456", WalletType.MOMO, AccountScheme.AIRTELTIGO, "0244123456"),
-            new("Frodo's Stanbic Visa", "654321", WalletType.CARD, AccountScheme.VISA, "0244123456")
+            new("Frodo's Mtn", "0244123456", WalletType.MOMO, InternalAccountScheme.MTN, "0244123456"),
+            new("Frodo's Voda", "0244123456", WalletType.MOMO, InternalAccountScheme.VODAFONE, "0244123456"),
+            new("Frodo's Mastercard", "123456", WalletType.CARD, InternalAccountScheme.MASTERCARD, "0244123456"),
+            new("Frodo's AirtelTigo", "0266123456", WalletType.MOMO, InternalAccountScheme.AIRTELTIGO, "0244123456"),
+            new("Frodo's other AirtelTigo", "0267123456", WalletType.MOMO, InternalAccountScheme.AIRTELTIGO, "0244123456"),
+            new("Frodo's Stanbic Visa", "654321", WalletType.CARD, InternalAccountScheme.VISA, "0244123456")
         };
 
         wallets.ForEach(x => x.DeactivateWallet());
@@ -86,7 +86,7 @@ public class WalletRespositoryTests
 
         var repository = CreateWalletRepository(contextMock);
 
-        var newWallet = new Wallet("Frodo's Visa", "192837", WalletType.CARD, AccountScheme.VISA, "0244123456");
+        var newWallet = new Wallet("Frodo's Visa", "192837", WalletType.CARD, InternalAccountScheme.VISA, "0244123456");
 
         // Act
         var result = await repository.AddWallet(newWallet);
@@ -102,7 +102,7 @@ public class WalletRespositoryTests
         // Arrage
         var existingWallets = new List<Wallet>()
         {
-            new("Frodo's Mtn", "0244123456", WalletType.MOMO, AccountScheme.MTN, "0244123456")
+            new("Frodo's Mtn", "0244123456", WalletType.MOMO, InternalAccountScheme.MTN, "0244123456")
         }.AsQueryable().BuildMockDbSet();
 
         var contextMock = new Mock<IWalletServiceContext>();
@@ -110,7 +110,7 @@ public class WalletRespositoryTests
 
         var repository = CreateWalletRepository(contextMock);
 
-        var newWallet = new Wallet("MTN", "0244123456", WalletType.MOMO, AccountScheme.AIRTELTIGO, "0244123456");
+        var newWallet = new Wallet("MTN", "0244123456", WalletType.MOMO, InternalAccountScheme.AIRTELTIGO, "0244123456");
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(async () => await repository.AddWallet(newWallet));
@@ -124,7 +124,7 @@ public class WalletRespositoryTests
         // Arrage
         var existingWallets = new List<Wallet>()
         {
-            new("Frodo's Mtn", "0244123456", WalletType.MOMO, AccountScheme.MTN, "0244123456")
+            new("Frodo's Mtn", "0244123456", WalletType.MOMO, InternalAccountScheme.MTN, "0244123456")
         }.AsQueryable().BuildMockDbSet();
 
         var contextMock = new Mock<IWalletServiceContext>();
@@ -134,7 +134,7 @@ public class WalletRespositoryTests
 
         var repository = CreateWalletRepository(contextMock);
 
-        var newWallet = new Wallet("Gandalf Ventures MTN", "0244123456", WalletType.MOMO, AccountScheme.AIRTELTIGO, "0302876543");
+        var newWallet = new Wallet("Gandalf Ventures MTN", "0244123456", WalletType.MOMO, InternalAccountScheme.AIRTELTIGO, "0302876543");
 
         // Act
         var result = await repository.AddWallet(newWallet);
@@ -149,10 +149,10 @@ public class WalletRespositoryTests
         // Arrage
         var existingWallets = new List<Wallet>()
         {
-            new("Frodo's Mtn", "0244123456", WalletType.MOMO, AccountScheme.MTN, "0244123456"),
-            new("Frodo's Voda", "0244123456", WalletType.MOMO, AccountScheme.VODAFONE, "0204123456"),
-            new("Frodo's Mastercard", "123456", WalletType.CARD, AccountScheme.MASTERCARD, "0244123456"),
-            new("Bilbo's Mastercard", "567890", WalletType.CARD, AccountScheme.MASTERCARD, "0240123789")
+            new("Frodo's Mtn", "0244123456", WalletType.MOMO, InternalAccountScheme.MTN, "0244123456"),
+            new("Frodo's Voda", "0244123456", WalletType.MOMO, InternalAccountScheme.VODAFONE, "0204123456"),
+            new("Frodo's Mastercard", "123456", WalletType.CARD, InternalAccountScheme.MASTERCARD, "0244123456"),
+            new("Bilbo's Mastercard", "567890", WalletType.CARD, InternalAccountScheme.MASTERCARD, "0240123789")
         }.AsQueryable().BuildMockDbSet();
 
         var contextMock = new Mock<IWalletServiceContext>();
@@ -162,7 +162,7 @@ public class WalletRespositoryTests
 
         var repository = CreateWalletRepository(contextMock);
 
-        var newWallet = new Wallet("Frodo's Visa", "192837", WalletType.CARD, AccountScheme.VISA, "0244123456");
+        var newWallet = new Wallet("Frodo's Visa", "192837", WalletType.CARD, InternalAccountScheme.VISA, "0244123456");
 
         // Act & Assert
         await Assert.ThrowsAsync<DbUpdateException>(async () => await repository.AddWallet(newWallet));
