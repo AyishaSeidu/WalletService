@@ -2,16 +2,25 @@ using WalletService.Api.Application.Mapping;
 
 using Microsoft.EntityFrameworkCore;
 using WalletService.Infrastructure.DataContext;
+using WalletService.Api.Application.Validation;
+using WalletService.Infrastructure.Repository.Interfaces;
+using WalletService.Infrastructure.Repository;
+using WalletService.Api.Controllers.Filters;
+using WalletService.Api.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var writeConnectionString = builder.Configuration.GetConnectionString("WalletServiceDbWriteConnectionString");
 ArgumentException.ThrowIfNullOrWhiteSpace(writeConnectionString, nameof(writeConnectionString));
-builder.Services.AddDbContext<WalletServiceContext>(options =>
+builder.Services.AddDbContext<IWalletServiceContext, WalletServiceContext>(options =>
 {
     options.UseSqlServer(writeConnectionString);
 });
+
+builder.Services.AddScoped<IWalletValidator, WalletValidator>();
+builder.Services.AddScoped<IWalletRepository, WalletRepository>();
+builder.Services.AddSingleton<ExceptionFilter<WalletController>>();
 
 
 builder.Services.AddAutoMapper(typeof(WalletReadDtoProfile));

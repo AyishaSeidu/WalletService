@@ -7,15 +7,15 @@ public class Wallet
 {
     private readonly int _id;
     private readonly string _walletName;
-    private readonly WalletType _walletType;
-    private readonly AccountScheme _accountScheme;
+    private readonly InternalWalletType _walletType;
+    private readonly InternalAccountScheme _accountScheme;
     private readonly string _walletOwner;
     private readonly string _accountNumber;
     private readonly DateTime _createdAt;
     private  bool _isActive;
     private  DateTime? _updatedAt;
 
-    public Wallet(string walletName, string accountNumber, WalletType walletType, AccountScheme accountScheme, string owner)
+    public Wallet(string walletName, string accountNumber, InternalWalletType walletType, InternalAccountScheme accountScheme, string owner)
     {
         _walletName = walletName;
         _walletType = walletType;
@@ -29,8 +29,8 @@ public class Wallet
     public int Id => _id;
     public string WalletName => _walletName;
     public string AccountNumber => _accountNumber;
-    public WalletType WalletType => _walletType;
-    public AccountScheme AccountScheme => _accountScheme;
+    public InternalWalletType WalletType => _walletType;
+    public InternalAccountScheme AccountScheme => _accountScheme;
     public DateTime CreatedAt => _createdAt;
     public string Owner => _walletOwner;
     public bool IsActive => _isActive;
