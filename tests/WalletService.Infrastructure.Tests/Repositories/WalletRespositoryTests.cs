@@ -353,6 +353,72 @@ public class WalletRespositoryTests
 
     #endregion
 
+    #region GetAllWallets
+
+    [Fact]
+    public async Task GetAllWallets_ActiveAndIncativeWalletsExist_ReturnsOnlyActiveWallets()
+    {
+        // Arrage
+        Wallet inactiveWallet1 = new("Frodo's Mtn", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.MTN, "0244123456");
+        Wallet inactiveWallet2 = new("Frodo's Voda", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.VODAFONE, "0204123456");
+        inactiveWallet1.DeactivateWallet();
+        inactiveWallet2.DeactivateWallet();
+        var existingWallets = new List<Wallet>()
+        {
+            inactiveWallet1,
+            inactiveWallet2,
+            new("Frodo's Mastercard", "123456", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, "0244123456"),
+            new("Bilbo's Mastercard", "567890", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, "0240123789")
+        }.AsQueryable().BuildMockDbSet();
+
+        var contextMock = new Mock<IWalletServiceContext>();
+        contextMock.Setup(x => x.Wallets).Returns(existingWallets.Object).Verifiable(Times.Once);
+
+        var repository = CreateWalletRepository(contextMock);
+
+        // Act
+        var results = await repository.GetAllWallets();
+
+        // Assert
+        Assert.NotEmpty(results);
+        Assert.Equal(2, results.Count());
+        Assert.False(results?.Any(x => x.AccountNumber == inactiveWallet1.AccountNumber));
+        Assert.False(results?.Any(x => x.AccountNumber == inactiveWallet2.AccountNumber));
+        Assert.False(results?.Any(x => x.IsActive == false));
+        contextMock.Verify();
+    }
+
+    [Fact]
+    public async Task GetAllWallets_NoActiveWalletsExist_ReturnsEmptyList()
+    {
+        // Arrage
+        Wallet inactiveWallet1 = new("Frodo's Mtn", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.MTN, "0244123456");
+        Wallet inactiveWallet2 = new("Frodo's Voda", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.VODAFONE, "0204123456");
+        inactiveWallet1.DeactivateWallet();
+        inactiveWallet2.DeactivateWallet();
+        
+        var allWallets = new List<Wallet>()
+        {
+            inactiveWallet1,
+            inactiveWallet2,
+        }.AsQueryable().BuildMockDbSet();
+
+        var contextMock = new Mock<IWalletServiceContext>();
+        contextMock.Setup(x => x.Wallets).Returns(allWallets.Object).Verifiable(Times.Once);
+
+        var repository = CreateWalletRepository(contextMock);
+
+        // Act
+        var results = await repository.GetAllWallets();
+
+        // Assert
+        Assert.NotNull(results);
+        Assert.Empty(results);
+
+        contextMock.Verify();
+    }
+    #endregion
+
     #region Hepers
 
     private WalletRepository CreateWalletRepository(Mock<IWalletServiceContext>? contextMock = null)
