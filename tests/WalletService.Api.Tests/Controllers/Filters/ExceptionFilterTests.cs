@@ -56,6 +56,7 @@ public class ExceptionFilterTests
             { new ArgumentOutOfRangeException(), StatusCodes.Status400BadRequest },
             { new ArgumentNullException(), StatusCodes.Status400BadRequest },
             { new ArgumentException(), StatusCodes.Status400BadRequest },
+            { new InvalidOperationException(), StatusCodes.Status400BadRequest },
             { new TestDbException(false), StatusCodes.Status500InternalServerError },
             { new TestDbException(true), StatusCodes.Status503ServiceUnavailable }
         };
