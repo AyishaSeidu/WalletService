@@ -223,6 +223,95 @@ public class WalletControllerTests
     }
     #endregion
 
+    #region GetWallet
+    [Fact]
+    public async void GetWallets_RepositoryReturnsListOfWallets_Success()
+    {
+        // Arrange
+        Wallet wallet1 = new("Bilbo Baggins", "368790", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, "1234567890"); 
+        Wallet wallet2 = new("Frodo's Voda", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.VODAFONE, "0204123456");
+
+        var repositoryMock = new Mock<IWalletRepository>();
+        repositoryMock.Setup(x => x.GetAllWallets()).ReturnsAsync([wallet1, wallet2]).Verifiable(Times.Once);
+
+        var loggerMock = new Mock<ILogger<WalletController>>();
+
+        var expectedResponseData = new List<WalletReadDto> {
+        new() {
+            Id = wallet1.Id,
+            AccountNumber = wallet1.AccountNumber,
+            WalletName = wallet1.WalletName,
+            AccountScheme = (AccountScheme)wallet1.AccountScheme,
+            WalletType = (WalletType)wallet1.WalletType,
+            OwnerPhoneNumber = wallet1.Owner
+        },
+        new() {
+            Id = wallet2.Id,
+            AccountNumber = wallet2.AccountNumber,
+            WalletName = wallet2.WalletName,
+            AccountScheme = (AccountScheme)wallet2.AccountScheme,
+            WalletType = (WalletType)wallet2.WalletType,
+            OwnerPhoneNumber = wallet2.Owner
+        }
+        };
+        var mapperMock = new Mock<IMapper>();
+        mapperMock.Setup(x => x.Map<IEnumerable<WalletReadDto>>(It.IsAny<IEnumerable<Wallet>>())).Returns(expectedResponseData).Verifiable(Times.Once);
+
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object,
+            logger: loggerMock.Object, mapperMock: mapperMock.Object);
+
+
+        // Act 
+        var response = await controller.GetAllWallets() as OkObjectResult;
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+
+        var retrievedWallets = response.Value as List<WalletReadDto>;
+        Assert.NotNull(retrievedWallets);
+        Assert.NotEmpty(retrievedWallets);
+        Assert.Equivalent(expectedResponseData, retrievedWallets);
+
+        mapperMock.Verify();
+
+        repositoryMock.Verify();
+        repositoryMock.VerifyNoOtherCalls();
+    }
+    [Fact]
+    public async void GetWallets_RepositoryReturnsEmptyListOfWallets_Success()
+    {
+        // Arrange
+        var repositoryMock = new Mock<IWalletRepository>();
+        repositoryMock.Setup(x => x.GetAllWallets()).ReturnsAsync(Enumerable.Empty<Wallet>).Verifiable(Times.Once);
+
+        var loggerMock = new Mock<ILogger<WalletController>>();
+
+        var mapperMock = new Mock<IMapper>();
+
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object,
+            logger: loggerMock.Object, mapperMock: mapperMock.Object);
+
+        // Act 
+        var response = await controller.GetAllWallets() as OkObjectResult;
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+
+        var retrievedWallets = response.Value as List<WalletReadDto>;
+
+        Assert.NotNull(retrievedWallets);
+        Assert.Empty(retrievedWallets);
+
+        repositoryMock.Verify();
+        repositoryMock.VerifyNoOtherCalls();
+
+        mapperMock.VerifyNoOtherCalls();
+    }
+
+    #endregion
+
     #region DeleteWallet
     [Fact]
     public async void DeleteWallet_WalletExists_Success()
