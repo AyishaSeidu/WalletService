@@ -384,7 +384,8 @@ public class WalletRespositoryTests
         Assert.Equal(2, results.Count());
         Assert.False(results?.Any(x => x.AccountNumber == inactiveWallet1.AccountNumber));
         Assert.False(results?.Any(x => x.AccountNumber == inactiveWallet2.AccountNumber));
-        Assert.False(results?.Any(x => x.IsActive == false));
+        Assert.Equal("Frodo's Mastercard", results?.First().WalletName);
+        Assert.Equal("Bilbo's Mastercard", results?.Last().WalletName);
         contextMock.Verify();
     }
 
