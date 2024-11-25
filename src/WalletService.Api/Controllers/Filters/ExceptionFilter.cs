@@ -17,6 +17,7 @@ public class ExceptionFilter<TController>(ILogger<TController> logger) : Excepti
             _ when exceptionType == typeof(ArgumentException) ||
                    exceptionType == typeof(BadHttpRequestException) ||
                    exceptionType == typeof(ArgumentNullException) ||
+                   exceptionType == typeof(InvalidOperationException) ||
                    exceptionType == typeof(ArgumentOutOfRangeException)
                    => HttpStatusCode.BadRequest,
             _ when exceptionType == typeof(SocketException) ||
