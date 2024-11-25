@@ -15,4 +15,9 @@ public interface IWalletRepository
     /// </summary>
     /// <returns>The deleted wallet</returns>
     Task<Wallet> MarkAsDeleted(int wallet);
+
+    /// <summary>
+    /// Retrieves a single given it's ik
+    /// </summary>
+    Task<Wallet?> GetWalletById(int walletId);
 }
