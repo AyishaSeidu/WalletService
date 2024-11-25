@@ -38,6 +38,24 @@ public class WalletController(IWalletRepository walletRepository, IWalletValidat
         return Ok(walletId);
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetWalletById(int id)
+    {
+        logger.LogInformation($"WalletService: Start -> Retrieving wallet: {id}");
+
+        ArgumentOutOfRangeException.ThrowIfLessThan(id, 1);
+        var wallet = await walletRepository.GetWalletById(id);
+
+        if (wallet is null)
+        {
+            logger.LogInformation($"WalletService: End -> Retrieving wallet: {id}, wallet not found");
+            return NotFound($"Wallet with id: {id} not found");
+        }
+        logger.LogInformation($"WalletService: End -> Retrieving wallet: {id}");
+
+        return Ok(mapper.Map<WalletReadDto>(wallet));
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteWallet(int id)
     {
