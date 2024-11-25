@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.RegularExpressions;
 using WalletService.Api.Application.Dtos;
 using WalletService.Api.Application.Dtos.Enums;
 using WalletService.Api.Application.Validation;
@@ -26,10 +25,15 @@ public class WalletController(IWalletRepository walletRepository, IWalletValidat
         var validationResult = walletValidator.ValidateWallet(wallet);
         if (validationResult.IsValid == false)
         {
+            logger.LogDebug($"Wallet Service: Stop -> Adding wallet: Invalid request : {validationResult.InvalidReason}");
             throw new ArgumentException(validationResult.InvalidReason);
         }
         var walletToAdd = new Wallet(wallet.WalletName, wallet.AccountNumber, GetInternalWalletType(wallet.WalletType), GetInternalAccountScheme(wallet.AccountScheme), wallet.OwnerPhoneNumber);
-       var walletId = await walletRepository.AddWallet(walletToAdd);
+        logger.LogInformation($"Wallet Service: -> New wallet validated, saving wallet for user {walletToAdd.Owner}");
+
+        var walletId = await walletRepository.AddWallet(walletToAdd);
+
+        logger.LogInformation($"Wallet Service: End -> New wallet: {walletId} added for user {walletToAdd.Owner}");
         return Ok(walletId);
     }
 
