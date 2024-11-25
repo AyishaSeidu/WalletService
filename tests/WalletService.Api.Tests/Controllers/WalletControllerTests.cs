@@ -178,12 +178,14 @@ public class WalletControllerTests
         var walletId = 1;
 
         var repositoryMock = new Mock<IWalletRepository>();
-        repositoryMock.Setup(x => x.MarkAsDeleted(walletId)).ReturnsAsync((Wallet)null!).Verifiable(Times.Once);
+        repositoryMock.Setup(x => x.MarkAsDeleted(walletId)).ReturnsAsync((Wallet)null!).
+            Verifiable(Times.Once);
 
         var loggerMock = new Mock<ILogger<WalletController>>();
 
         var mapperMock = new Mock<IMapper>();
-        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, logger: loggerMock.Object, mapperMock: mapperMock.Object);
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, 
+            logger: loggerMock.Object, mapperMock: mapperMock.Object);
 
         // Act 
         var response = await controller.DeleteWallet(walletId) as NotFoundObjectResult;
@@ -208,7 +210,8 @@ public class WalletControllerTests
         var repositoryMock = new Mock<IWalletRepository>();
         var loggerMock = new Mock<ILogger<WalletController>>();
         var mapperMock = new Mock<IMapper>();
-        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, logger: loggerMock.Object, mapperMock: mapperMock.Object);
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, 
+            logger: loggerMock.Object, mapperMock: mapperMock.Object);
 
         // Act 
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async ()=>  await controller.DeleteWallet(walletId));
