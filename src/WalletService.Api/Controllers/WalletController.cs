@@ -66,7 +66,6 @@ public class WalletController(IWalletRepository walletRepository, IWalletValidat
         if (!wallets.Any())
         {
             logger.LogInformation($"WalletService:  End GetAllWallets -> No wallets found: returning an empty list");
-
             return Ok(new List<WalletReadDto>());
         }
 
