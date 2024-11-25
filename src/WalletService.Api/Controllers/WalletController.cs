@@ -19,9 +19,8 @@ namespace WalletService.Api.Controllers;
 public class WalletController(IWalletRepository walletRepository, IWalletValidator walletValidator, ILogger<WalletController> logger) : ControllerBase
 {
 
-    // POST api/<WalletController>
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] WalletWriteDto wallet)
+    public async Task<IActionResult> AddWallet([FromBody] WalletWriteDto wallet)
     {
         logger.LogInformation($"Wallet Service: Start -> Adding a new wallet for user {wallet.OwnerPhoneNumber}");
         var validationResult = walletValidator.ValidateWallet(wallet);
