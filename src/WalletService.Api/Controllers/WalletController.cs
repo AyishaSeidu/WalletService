@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using WalletService.Api.Application.Dtos;
 using WalletService.Api.Application.Dtos.Enums;
 using WalletService.Api.Application.Validation;
@@ -15,7 +16,7 @@ namespace WalletService.Api.Controllers;
 [ApiController]
 [ServiceFilter(typeof(ExceptionFilter<WalletController>))]
 
-public class WalletController(IWalletRepository walletRepository, IWalletValidator walletValidator, ILogger<WalletController> logger) : ControllerBase
+public class WalletController(IWalletRepository walletRepository, IWalletValidator walletValidator, ILogger<WalletController> logger, IMapper mapper) : ControllerBase
 {
 
     [HttpPost]
@@ -37,6 +38,20 @@ public class WalletController(IWalletRepository walletRepository, IWalletValidat
         return Ok(walletId);
     }
 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteWallet(int id)
+    {
+        logger.LogInformation($"WalletService: Start -> Deleting wallet: {id}");
+
+        ArgumentOutOfRangeException.ThrowIfLessThan(id, 1);
+        var deletedWallet = await walletRepository.MarkAsDeleted(id);
+
+        if (deletedWallet is null)
+        {
+            return NotFound($"Wallet with id: {id} not found");
+        }
+        return Ok(mapper.Map<WalletReadDto>(deletedWallet));
+    }
     private static InternalWalletType GetInternalWalletType(WalletType externalWalletType)
     {
         return externalWalletType switch
