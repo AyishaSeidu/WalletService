@@ -8,7 +8,7 @@ namespace WalletService.Infrastructure.Repository;
 public class WalletRepository(IWalletServiceContext context) : IWalletRepository
 {
     /// <inheritdoc />
-    public async Task<int> AddWallet(Wallet wallet)
+    public async Task<Wallet> AddWallet(Wallet wallet)
     {
         ArgumentNullException.ThrowIfNull(wallet, nameof(wallet));
 
@@ -25,7 +25,7 @@ public class WalletRepository(IWalletServiceContext context) : IWalletRepository
                 
         await context.SaveChangesAsync();
 
-        return wallet.Id;
+        return wallet;
     }
 
     /// <inheritdoc />
