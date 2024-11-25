@@ -29,6 +29,12 @@ public class WalletRepository(IWalletServiceContext context) : IWalletRepository
     }
 
     /// <inheritdoc />
+    public async Task<IEnumerable<Wallet>> GetAllWallets()
+    {
+        return await context.Wallets.Where(x=> x.IsActive).ToListAsync();
+    }
+
+    /// <inheritdoc />
     public async Task<Wallet?> GetWalletById(int walletId)
     {
         return await context.Wallets.FirstOrDefaultAsync(x => x.Id == walletId && x.IsActive);
