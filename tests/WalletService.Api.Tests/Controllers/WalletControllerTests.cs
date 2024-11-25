@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -14,6 +15,7 @@ namespace WalletService.Api.Tests.Controllers;
 
 public class WalletControllerTests
 {
+    #region AddWallet
 
     [Fact]
     public async void AddWallet_ValidRequest_Success()
@@ -118,11 +120,117 @@ public class WalletControllerTests
         repositoryMock.Verify();
         repositoryMock.VerifyNoOtherCalls();
     }
+    #endregion
 
-    #region
-    private static WalletController CreateWalletController(IWalletRepository walletRepositoryMock, IWalletValidator walletValidator, ILogger<WalletController> logger)
+    #region DeleteWallet
+    [Fact]
+    public async void DeleteWallet_WalletExists_Success()
     {
-        return new WalletController(walletRepositoryMock, walletValidator, logger);
+        // Arrange
+        var walletId = 1;
+        var wallet = new Wallet("Frodo Baggins", "368790", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, "1234567890");
+
+        
+        var repositoryMock = new Mock<IWalletRepository>();
+        repositoryMock.Setup(x => x.MarkAsDeleted(walletId)).ReturnsAsync(wallet).Verifiable(Times.Once);
+
+        var loggerMock = new Mock<ILogger<WalletController>>();
+
+        var dto = new WalletReadDto
+        {
+            Id = walletId,
+            AccountNumber = wallet.AccountNumber,
+            WalletName = wallet.WalletName,
+            AccountScheme = (AccountScheme)wallet.AccountScheme,
+            WalletType = (WalletType)wallet.WalletType,
+            OwnerPhoneNumber = wallet.Owner
+        };
+        var mapperMock = new Mock<IMapper>();
+        mapperMock.Setup(x => x.Map<WalletReadDto>(It.IsAny<Wallet>())).Returns(dto).Verifiable(Times.Once);
+
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, logger: loggerMock.Object, mapperMock: mapperMock.Object);
+
+
+        // Act 
+        var response = await controller.DeleteWallet(walletId) as OkObjectResult;
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+        var deletedWallet = response.Value as WalletReadDto;
+        Assert.NotNull(deletedWallet);
+        Assert.Equal(wallet.WalletName, deletedWallet.WalletName);
+        Assert.Equal(wallet.AccountNumber, deletedWallet.AccountNumber);
+        Assert.Equal(wallet.Owner, deletedWallet.OwnerPhoneNumber);
+        Assert.Equal((WalletType)wallet.WalletType, deletedWallet.WalletType);
+        Assert.Equal((AccountScheme)wallet.AccountScheme, deletedWallet.AccountScheme);
+
+        mapperMock.Verify();
+
+        repositoryMock.Verify();
+        repositoryMock.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public async void DeleteWallet_WalletDoesNotExists_ReturnsNotFound()
+    {
+        // Arrange
+        var walletId = 1;
+
+        var repositoryMock = new Mock<IWalletRepository>();
+        repositoryMock.Setup(x => x.MarkAsDeleted(walletId)).ReturnsAsync((Wallet)null!).
+            Verifiable(Times.Once);
+
+        var loggerMock = new Mock<ILogger<WalletController>>();
+
+        var mapperMock = new Mock<IMapper>();
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, 
+            logger: loggerMock.Object, mapperMock: mapperMock.Object);
+
+        // Act 
+        var response = await controller.DeleteWallet(walletId) as NotFoundObjectResult;
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(StatusCodes.Status404NotFound, response.StatusCode);
+
+        mapperMock.VerifyNoOtherCalls();
+
+        repositoryMock.Verify();
+        repositoryMock.VerifyNoOtherCalls();
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async void DeleteWallet_InvalidWalletId_ThrowsArgumentOutOfRangeException(int walletId)
+    {
+        // Arrange
+
+        var repositoryMock = new Mock<IWalletRepository>();
+        var loggerMock = new Mock<ILogger<WalletController>>();
+        var mapperMock = new Mock<IMapper>();
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, 
+            logger: loggerMock.Object, mapperMock: mapperMock.Object);
+
+        // Act 
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async ()=>  await controller.DeleteWallet(walletId));
+
+        // Assert
+        mapperMock.VerifyNoOtherCalls();
+
+        repositoryMock.VerifyNoOtherCalls();
+    }
+    #endregion
+
+    #region Helpers
+
+    private static WalletController CreateWalletController(IWalletRepository walletRepositoryMock, IWalletValidator? walletValidator = null, ILogger<WalletController>? logger = null, IMapper? mapperMock = null)
+    {
+        mapperMock = mapperMock ?? new Mock<IMapper>().Object;
+        walletValidator ??= new Mock<IWalletValidator>().Object;
+        logger ??= new Mock<ILogger<WalletController>>().Object;
+        return new WalletController(walletRepositoryMock, walletValidator, logger, mapperMock);
     }
     #endregion
 }
