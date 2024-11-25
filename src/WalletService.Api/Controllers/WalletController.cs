@@ -48,8 +48,10 @@ public class WalletController(IWalletRepository walletRepository, IWalletValidat
 
         if (deletedWallet is null)
         {
+            logger.LogInformation($"WalletService: End -> Deleting wallet: {id}, wallet not found");
             return NotFound($"Wallet with id: {id} not found");
         }
+        logger.LogInformation($"WalletService: End -> Deleting wallet: {id}");
         return Ok(mapper.Map<WalletReadDto>(deletedWallet));
     }
     private static InternalWalletType GetInternalWalletType(WalletType externalWalletType)
