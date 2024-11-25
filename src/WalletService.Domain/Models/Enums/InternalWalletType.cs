@@ -2,6 +2,6 @@
 
 public enum InternalWalletType
 {
-    MOMO,
-    CARD
+    CARD = 1,
+    MOMO = 2
 }
