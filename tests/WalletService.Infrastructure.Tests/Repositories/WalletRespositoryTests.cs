@@ -267,6 +267,92 @@ public class WalletRespositoryTests
         contextMock.Verify();
     }
     #endregion
+
+    #region GetWalletById
+    [Fact]
+    public async Task GetWalletById_WalletExitsAndIsActive_ReturnsWallet()
+    {
+        // Arrange
+        var wallet = new Wallet("Frodo's Mtn", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.MTN, "0244123456");
+        var existingWallets = new List<Wallet>()
+        {
+            wallet
+        }.AsQueryable().BuildMockDbSet();
+
+        var contextMock = new Mock<IWalletServiceContext>();
+        contextMock.Setup(x => x.Wallets).Returns(existingWallets.Object).Verifiable(Times.Once);
+
+        var repository = CreateWalletRepository(contextMock);
+
+        // Act
+        var result = await repository.GetWalletById(wallet.Id);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(wallet.Id, result.Id);
+        Assert.Equal(wallet.WalletName, result.WalletName);
+        Assert.Equal(wallet.AccountNumber, result.AccountNumber);
+        Assert.Equal(wallet.WalletType, result.WalletType);
+        Assert.Equal(wallet.AccountScheme, result.AccountScheme);
+        Assert.Equal(wallet.Owner, result.Owner);
+        Assert.True(result.IsActive);
+        Assert.Null(result.UpdatedAt);
+
+        contextMock.Verify();
+    }
+
+    [Fact]
+    public async Task GetWalletById_WalletDoesNotExist_ReturnsNull()
+    {
+        // Arrange
+        var wallet = new Wallet("Frodo's Mtn", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.MTN, "0244123456");
+        var existingWallets = new List<Wallet>()
+        {
+            wallet
+        }.AsQueryable().BuildMockDbSet();
+
+        var contextMock = new Mock<IWalletServiceContext>();
+        contextMock.Setup(x => x.Wallets).Returns(existingWallets.Object).Verifiable(Times.Once);
+
+        var repository = CreateWalletRepository(contextMock);
+
+        int aNonExistngId = 2;
+        // Act
+        var result = await repository.GetWalletById(aNonExistngId);
+
+        // Assert
+        Assert.Null(result);
+
+        contextMock.Verify();
+    }
+
+    [Fact]
+    public async Task GetWalletById_WalletExistsButIsInactive_ReturnsNull()
+    {
+        // Arrange
+        var wallet = new Wallet("Frodo's Mtn", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.MTN, "0244123456");
+        wallet.DeactivateWallet();
+        var existingWallets = new List<Wallet>()
+        {
+            wallet
+        }.AsQueryable().BuildMockDbSet();
+
+        var contextMock = new Mock<IWalletServiceContext>();
+        contextMock.Setup(x => x.Wallets).Returns(existingWallets.Object).Verifiable(Times.Once);
+
+        var repository = CreateWalletRepository(contextMock);
+
+        // Act
+        var result = await repository.GetWalletById(wallet.Id);
+
+        // Assert
+        Assert.Null(result);
+
+        contextMock.Verify();
+    }
+
+    #endregion
+
     #region Hepers
 
     private WalletRepository CreateWalletRepository(Mock<IWalletServiceContext>? contextMock = null)
