@@ -27,4 +27,20 @@ public class WalletRepository(IWalletServiceContext context) : IWalletRepository
 
         return wallet.Id;
     }
+
+    /// <inheritdoc />
+    public async Task<Wallet> MarkAsDeleted(int walletId)
+    {
+        var walletToDelete = await context.Wallets.FirstOrDefaultAsync(x => x.Id == walletId && x.IsActive);
+        if (walletToDelete is null)
+        {
+            return null;
+        }
+
+        walletToDelete.DeactivateWallet();
+        context.Wallets.Update(walletToDelete);
+
+        await context.SaveChangesAsync();
+        return walletToDelete;
+    }
 }
