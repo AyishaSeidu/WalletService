@@ -148,7 +148,8 @@ public class WalletControllerTests
         var mapperMock = new Mock<IMapper>();
         mapperMock.Setup(x => x.Map<WalletReadDto>(It.IsAny<Wallet>())).Returns(dto).Verifiable(Times.Once);
 
-        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, logger: loggerMock.Object, mapperMock: mapperMock.Object);
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, 
+            logger: loggerMock.Object, mapperMock: mapperMock.Object);
 
 
         // Act 
@@ -206,7 +207,6 @@ public class WalletControllerTests
     public async void GetWallet_InvalidWalletId_ThrowsArgumentOutOfRangeException(int walletId)
     {
         // Arrange
-
         var repositoryMock = new Mock<IWalletRepository>();
         var loggerMock = new Mock<ILogger<WalletController>>();
         var mapperMock = new Mock<IMapper>();
