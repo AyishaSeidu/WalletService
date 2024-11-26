@@ -30,12 +30,12 @@ public class WalletController(IWalletRepository walletRepository, IWalletValidat
             throw new ArgumentException(validationResult.InvalidReason);
         }
         var walletToAdd = new Wallet(wallet.WalletName, wallet.AccountNumber, GetInternalWalletType(wallet.WalletType), GetInternalAccountScheme(wallet.AccountScheme), wallet.OwnerPhoneNumber);
-        logger.LogInformation($"Wallet Service: -> New wallet validated, saving wallet for user {walletToAdd.Owner}");
+        logger.LogInformation($"WalletService: -> New wallet validated, saving wallet for user {walletToAdd.Owner}");
 
-        var walletId = await walletRepository.AddWallet(walletToAdd);
+        var walletAdded = await walletRepository.AddWallet(walletToAdd);
 
-        logger.LogInformation($"Wallet Service: End -> New wallet: {walletId} added for user {walletToAdd.Owner}");
-        return Ok(walletId);
+        logger.LogInformation($"Wallet Service: End -> New wallet: {walletAdded.Id} added for user {walletAdded.Owner}");
+        return CreatedAtAction(nameof(GetWalletById), new { id = walletAdded.Id}, mapper.Map<WalletReadDto>(walletAdded));
     }
 
     [HttpGet("{id}")]

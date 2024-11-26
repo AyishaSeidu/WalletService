@@ -35,24 +35,44 @@ public class WalletControllerTests
         validatorMock.Setup(x=> x.ValidateWallet(request)).Returns(new ValidationResult(true)).Verifiable(Times.Once);
 
         var repositoryMock = new Mock<IWalletRepository>();
-        repositoryMock.Setup(x=> x.AddWallet(It.Is<Wallet>(w=> w.AccountNumber == request.AccountNumber && w.WalletName == request.WalletName && w.WalletType==InternalWalletType.MOMO && w.AccountScheme == InternalAccountScheme.MTN))).ReturnsAsync(walletId).Verifiable(Times.Once);
+        var walletToSave = new Wallet(request.WalletName, request.AccountNumber, InternalWalletType.MOMO, InternalAccountScheme.MTN, request.OwnerPhoneNumber);
+        repositoryMock.Setup(x=> x.AddWallet(It.Is<Wallet>(w=> w.AccountNumber == request.AccountNumber && w.WalletName == request.WalletName && w.WalletType==InternalWalletType.MOMO && w.AccountScheme == InternalAccountScheme.MTN))).ReturnsAsync(walletToSave).Verifiable(Times.Once);
 
         var loggerMock = new Mock<ILogger<WalletController>>();
-        var controller = CreateWalletController(repositoryMock.Object, validatorMock.Object, loggerMock.Object);
+
+        var expectedResponseValue = new WalletReadDto
+        {
+            Id = walletId,
+            AccountNumber = request.AccountNumber,
+            WalletName = request.WalletName,
+            AccountScheme = request.AccountScheme,
+            WalletType = request.WalletType,
+            OwnerPhoneNumber = request.OwnerPhoneNumber
+        };
+
+        var mapperMock = new Mock<IMapper>();
+        mapperMock.Setup(x => x.Map<WalletReadDto>(It.IsAny<Wallet>())).Returns(expectedResponseValue).Verifiable(Times.Once);
+
+        var controller = CreateWalletController(repositoryMock.Object, validatorMock.Object, loggerMock.Object, mapperMock: mapperMock.Object);
         
         // Act 
-        var response = await controller.AddWallet(request) as OkObjectResult;
+        var response = await controller.AddWallet(request) as CreatedAtActionResult;
 
         // Assert
         Assert.NotNull(response);
-        Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
-        Assert.Equal(walletId, response.Value);
+        Assert.Equal(StatusCodes.Status201Created, response.StatusCode);
+
+        var responseValue = response.Value as WalletReadDto;
+        Assert.Equal(expectedResponseValue, responseValue);
 
         validatorMock.Verify();
         validatorMock.VerifyNoOtherCalls();
 
         repositoryMock.Verify();
         repositoryMock.VerifyNoOtherCalls();
+
+        mapperMock.Verify();
+        mapperMock.VerifyNoOtherCalls();
     }
 
     [Fact]
@@ -223,7 +243,7 @@ public class WalletControllerTests
     }
     #endregion
 
-    #region GetWallet
+    #region GetWallets
     [Fact]
     public async void GetWallets_RepositoryReturnsListOfWallets_Success()
     {
