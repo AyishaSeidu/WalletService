@@ -12,8 +12,8 @@ public class Wallet
     private readonly string _walletOwner;
     private readonly string _accountNumber;
     private readonly DateTime _createdAt;
-    private  bool _isActive;
-    private  DateTime? _updatedAt;
+    private bool _isActive;
+    private DateTime? _updatedAt;
 
     public Wallet(string walletName, string accountNumber, InternalWalletType walletType, InternalAccountScheme accountScheme, string owner)
     {
@@ -48,6 +48,6 @@ public class Wallet
     protected Wallet()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     {
-        
+
     }
 }

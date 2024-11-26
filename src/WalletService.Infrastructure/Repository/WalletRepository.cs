@@ -12,17 +12,17 @@ public class WalletRepository(IWalletServiceContext context) : IWalletRepository
     {
         ArgumentNullException.ThrowIfNull(wallet, nameof(wallet));
 
-        if (await context.Wallets.AnyAsync(x => x.AccountNumber == wallet.AccountNumber && x.Owner == wallet.Owner && x.IsActive)) 
+        if (await context.Wallets.AnyAsync(x => x.AccountNumber == wallet.AccountNumber && x.Owner == wallet.Owner && x.IsActive))
         {
             throw new InvalidOperationException("Wallet already added for user");
         }
 
-        if(await context.Wallets.CountAsync(x=> x.Owner == wallet.Owner && x.IsActive) >= Constants.Constants.MaxNumberOfWalletsPerPerson)
+        if (await context.Wallets.CountAsync(x => x.Owner == wallet.Owner && x.IsActive) >= Constants.Constants.MaxNumberOfWalletsPerPerson)
         {
             throw new InvalidOperationException("A user cannot have more than 5 wallets");
         }
         context.Wallets.Add(wallet);
-                
+
         await context.SaveChangesAsync();
 
         return wallet;
@@ -31,7 +31,7 @@ public class WalletRepository(IWalletServiceContext context) : IWalletRepository
     /// <inheritdoc />
     public async Task<IEnumerable<Wallet>> GetAllWallets()
     {
-        return await context.Wallets.Where(x=> x.IsActive).ToListAsync();
+        return await context.Wallets.Where(x => x.IsActive).ToListAsync();
     }
 
     /// <inheritdoc />

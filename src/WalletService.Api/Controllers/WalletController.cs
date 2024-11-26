@@ -35,7 +35,7 @@ public class WalletController(IWalletRepository walletRepository, IWalletValidat
         var walletAdded = await walletRepository.AddWallet(walletToAdd);
 
         logger.LogInformation($"Wallet Service: End -> New wallet: {walletAdded.Id} added for user {walletAdded.Owner}");
-        return CreatedAtAction(nameof(GetWalletById), new { id = walletAdded.Id}, mapper.Map<WalletReadDto>(walletAdded));
+        return CreatedAtAction(nameof(GetWalletById), new { id = walletAdded.Id }, mapper.Map<WalletReadDto>(walletAdded));
     }
 
     [HttpGet("{id}")]

@@ -1,12 +1,11 @@
-using WalletService.Api.Application.Mapping;
-
 using Microsoft.EntityFrameworkCore;
-using WalletService.Infrastructure.DataContext;
+using WalletService.Api.Application.Mapping;
 using WalletService.Api.Application.Validation;
-using WalletService.Infrastructure.Repository.Interfaces;
-using WalletService.Infrastructure.Repository;
-using WalletService.Api.Controllers.Filters;
 using WalletService.Api.Controllers;
+using WalletService.Api.Controllers.Filters;
+using WalletService.Infrastructure.DataContext;
+using WalletService.Infrastructure.Repository;
+using WalletService.Infrastructure.Repository.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

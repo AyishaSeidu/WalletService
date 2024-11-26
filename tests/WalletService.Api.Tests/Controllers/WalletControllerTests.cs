@@ -32,11 +32,11 @@ public class WalletControllerTests
         };
 
         var validatorMock = new Mock<IWalletValidator>();
-        validatorMock.Setup(x=> x.ValidateWallet(request)).Returns(new ValidationResult(true)).Verifiable(Times.Once);
+        validatorMock.Setup(x => x.ValidateWallet(request)).Returns(new ValidationResult(true)).Verifiable(Times.Once);
 
         var repositoryMock = new Mock<IWalletRepository>();
         var walletToSave = new Wallet(request.WalletName, request.AccountNumber, InternalWalletType.MOMO, InternalAccountScheme.MTN, request.OwnerPhoneNumber);
-        repositoryMock.Setup(x=> x.AddWallet(It.Is<Wallet>(w=> w.AccountNumber == request.AccountNumber && w.WalletName == request.WalletName && w.WalletType==InternalWalletType.MOMO && w.AccountScheme == InternalAccountScheme.MTN))).ReturnsAsync(walletToSave).Verifiable(Times.Once);
+        repositoryMock.Setup(x => x.AddWallet(It.Is<Wallet>(w => w.AccountNumber == request.AccountNumber && w.WalletName == request.WalletName && w.WalletType == InternalWalletType.MOMO && w.AccountScheme == InternalAccountScheme.MTN))).ReturnsAsync(walletToSave).Verifiable(Times.Once);
 
         var loggerMock = new Mock<ILogger<WalletController>>();
 
@@ -54,7 +54,7 @@ public class WalletControllerTests
         mapperMock.Setup(x => x.Map<WalletReadDto>(It.IsAny<Wallet>())).Returns(expectedResponseValue).Verifiable(Times.Once);
 
         var controller = CreateWalletController(repositoryMock.Object, validatorMock.Object, loggerMock.Object, mapperMock: mapperMock.Object);
-        
+
         // Act 
         var response = await controller.AddWallet(request) as CreatedAtActionResult;
 
@@ -168,7 +168,7 @@ public class WalletControllerTests
         var mapperMock = new Mock<IMapper>();
         mapperMock.Setup(x => x.Map<WalletReadDto>(It.IsAny<Wallet>())).Returns(dto).Verifiable(Times.Once);
 
-        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, 
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object,
             logger: loggerMock.Object, mapperMock: mapperMock.Object);
 
 
@@ -248,7 +248,7 @@ public class WalletControllerTests
     public async void GetWallets_RepositoryReturnsListOfWallets_Success()
     {
         // Arrange
-        Wallet wallet1 = new("Bilbo Baggins", "368790", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, "1234567890"); 
+        Wallet wallet1 = new("Bilbo Baggins", "368790", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, "1234567890");
         Wallet wallet2 = new("Frodo's Voda", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.VODAFONE, "0204123456");
 
         var repositoryMock = new Mock<IWalletRepository>();
@@ -340,7 +340,7 @@ public class WalletControllerTests
         var walletId = 1;
         var wallet = new Wallet("Frodo Baggins", "368790", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, "1234567890");
 
-        
+
         var repositoryMock = new Mock<IWalletRepository>();
         repositoryMock.Setup(x => x.MarkAsDeleted(walletId)).ReturnsAsync(wallet).Verifiable(Times.Once);
 
@@ -394,7 +394,7 @@ public class WalletControllerTests
         var loggerMock = new Mock<ILogger<WalletController>>();
 
         var mapperMock = new Mock<IMapper>();
-        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, 
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object,
             logger: loggerMock.Object, mapperMock: mapperMock.Object);
 
         // Act 
@@ -420,11 +420,11 @@ public class WalletControllerTests
         var repositoryMock = new Mock<IWalletRepository>();
         var loggerMock = new Mock<ILogger<WalletController>>();
         var mapperMock = new Mock<IMapper>();
-        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object, 
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object,
             logger: loggerMock.Object, mapperMock: mapperMock.Object);
 
         // Act 
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async ()=>  await controller.DeleteWallet(walletId));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await controller.DeleteWallet(walletId));
 
         // Assert
         mapperMock.VerifyNoOtherCalls();
