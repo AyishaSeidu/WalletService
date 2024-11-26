@@ -56,6 +56,26 @@ public class WalletController(IWalletRepository walletRepository, IWalletValidat
         return Ok(mapper.Map<WalletReadDto>(wallet));
     }
 
+    [HttpGet("user/{phoneNumber}")]
+    public async Task<IActionResult> GetWalletsByUserId(string phoneNumber)
+    {
+        logger.LogInformation($"WalletService: Start GetWalletByUserId -> Retrieving wallets for user: {phoneNumber}");
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(phoneNumber);
+        var wallets = await walletRepository.GetWalletsByUserId(phoneNumber);
+
+        if (!wallets.Any())
+        {
+            logger.LogInformation($"WalletService: End GetWalletsByUserId -> No wallets found for user {phoneNumber}: returning an empty list");
+            return Ok(new List<WalletReadDto>());
+        }
+
+        logger.LogInformation($"WalletService: GetWalletsByUserId -> Found {wallets.Count()} wallets for user {phoneNumber}");
+        logger.LogInformation($"WalletService: End GetWalletsByUserId -> Retrieving wallets");
+
+        return Ok(mapper.Map<List<WalletReadDto>>(wallets));
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAllWallets()
     {
