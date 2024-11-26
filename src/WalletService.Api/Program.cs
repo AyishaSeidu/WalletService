@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using WalletService.Api.Application.Mapping;
 using WalletService.Api.Application.Validation;
 using WalletService.Api.Controllers;
@@ -24,7 +25,10 @@ builder.Services.AddSingleton<ExceptionFilter<WalletController>>();
 
 builder.Services.AddAutoMapper(typeof(WalletReadDtoProfile));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(opt =>
+{
+    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
