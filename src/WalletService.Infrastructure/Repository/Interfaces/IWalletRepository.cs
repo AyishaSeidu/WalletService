@@ -26,4 +26,10 @@ public interface IWalletRepository
     /// </summary>
     /// <returns>A list of wallets</returns>
     Task<IEnumerable<Wallet>> GetAllWallets();
+
+    /// <summary>
+    /// Retrieves all active wallets for a single user from the database
+    /// </summary>
+    /// <returns>A list of wallets</returns>
+    Task<IEnumerable<Wallet>> GetWalletsByUserId(string userId);
 }

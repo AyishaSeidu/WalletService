@@ -332,6 +332,116 @@ public class WalletControllerTests
 
     #endregion
 
+    #region GetWalletsByUserPhoneNumber
+    [Fact]
+    public async void GetWalletsByUserPhoneNumber_RepositoryReturnsListOfWallets_Success()
+    {
+        // Arrange
+        const string userPhoneNumer = "1234567890";
+        Wallet wallet1 = new("Bilbo Baggins", "368790", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, userPhoneNumer);
+        Wallet wallet2 = new("Frodo's Voda", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.VODAFONE, userPhoneNumer);
+
+        var repositoryMock = new Mock<IWalletRepository>();
+        repositoryMock.Setup(x => x.GetWalletsByUserId(userPhoneNumer)).ReturnsAsync([wallet1, wallet2]).Verifiable(Times.Once);
+
+        var loggerMock = new Mock<ILogger<WalletController>>();
+
+        var expectedResponseData = new List<WalletReadDto> {
+        new() {
+            Id = wallet1.Id,
+            AccountNumber = wallet1.AccountNumber,
+            WalletName = wallet1.WalletName,
+            AccountScheme = (AccountScheme)wallet1.AccountScheme,
+            WalletType = (WalletType)wallet1.WalletType,
+            OwnerPhoneNumber = wallet1.Owner
+        },
+        new() {
+            Id = wallet2.Id,
+            AccountNumber = wallet2.AccountNumber,
+            WalletName = wallet2.WalletName,
+            AccountScheme = (AccountScheme)wallet2.AccountScheme,
+            WalletType = (WalletType)wallet2.WalletType,
+            OwnerPhoneNumber = wallet2.Owner
+        }
+        };
+        var mapperMock = new Mock<IMapper>();
+        mapperMock.Setup(x => x.Map<IEnumerable<WalletReadDto>>(It.IsAny<IEnumerable<Wallet>>())).Returns(expectedResponseData).Verifiable(Times.Once);
+
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object,
+            logger: loggerMock.Object, mapperMock: mapperMock.Object);
+
+
+        // Act 
+        var response = await controller.GetWalletsByUserPhoneNumber(userPhoneNumer) as OkObjectResult;
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+
+        var retrievedWallets = response.Value as List<WalletReadDto>;
+        Assert.NotNull(retrievedWallets);
+        Assert.NotEmpty(retrievedWallets);
+        Assert.Equivalent(expectedResponseData, retrievedWallets);
+
+        mapperMock.Verify();
+
+        repositoryMock.Verify();
+        repositoryMock.VerifyNoOtherCalls();
+    }
+    [Fact]
+    public async void GetWalletsByUserPhoneNumber_RepositoryReturnsEmptyListOfWallets_Success()
+    {
+        // Arrange
+        const string userPhoneNumer = "1234567890";
+        var repositoryMock = new Mock<IWalletRepository>();
+        repositoryMock.Setup(x => x.GetWalletsByUserId(userPhoneNumer)).ReturnsAsync(Enumerable.Empty<Wallet>).Verifiable(Times.Once);
+
+        var loggerMock = new Mock<ILogger<WalletController>>();
+
+        var mapperMock = new Mock<IMapper>();
+
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object,
+            logger: loggerMock.Object, mapperMock: mapperMock.Object);
+
+        // Act 
+        var response = await controller.GetWalletsByUserPhoneNumber(userPhoneNumer) as OkObjectResult;
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Equal(StatusCodes.Status200OK, response.StatusCode);
+
+        var retrievedWallets = response.Value as List<WalletReadDto>;
+
+        Assert.NotNull(retrievedWallets);
+        Assert.Empty(retrievedWallets);
+
+        repositoryMock.Verify();
+        repositoryMock.VerifyNoOtherCalls();
+
+        mapperMock.VerifyNoOtherCalls();
+    }
+
+    [Theory]
+    [MemberData(nameof(InvalidUserPhoneNumberWithExpectedException))]
+    public async void GetWalletsByUserPhoneNumber_InvalidUserId_ThrowsArgumentException(string phoneNumber, Exception exception)
+    {
+        // Arrange
+        var repositoryMock = new Mock<IWalletRepository>();
+        var loggerMock = new Mock<ILogger<WalletController>>();
+        var mapperMock = new Mock<IMapper>();
+        var controller = CreateWalletController(walletRepositoryMock: repositoryMock.Object,
+            logger: loggerMock.Object, mapperMock: mapperMock.Object);
+
+        // Act 
+        await Assert.ThrowsAsync(exception.GetType(), async () => await controller.GetWalletsByUserPhoneNumber(phoneNumber));
+
+        // Assert
+        mapperMock.VerifyNoOtherCalls();
+
+        repositoryMock.VerifyNoOtherCalls();
+    }
+    #endregion
+
     #region DeleteWallet
     [Fact]
     public async void DeleteWallet_WalletExists_Success()
@@ -442,5 +552,13 @@ public class WalletControllerTests
         logger ??= new Mock<ILogger<WalletController>>().Object;
         return new WalletController(walletRepositoryMock, walletValidator, logger, mapperMock);
     }
+
+    public static TheoryData<string, Exception> InvalidUserPhoneNumberWithExpectedException => new()
+    {
+        { "", new ArgumentException() },
+        { "        ", new ArgumentException() },
+        { null!, new ArgumentNullException() }
+
+    };
     #endregion
 }

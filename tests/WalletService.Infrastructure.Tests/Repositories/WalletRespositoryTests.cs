@@ -420,6 +420,80 @@ public class WalletRespositoryTests
     }
     #endregion
 
+
+    #region GetAllWallets
+
+    [Fact]
+    public async Task GetWalletsByUserId_ActiveAndIncativeWalletsExistForUser_ReturnsOnlyActiveWalletsForUser()
+    {
+        // Arrage
+        Wallet frodoActiveWallet = new("Frodo's Mastercard", "123456", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, "0244123456");
+        Wallet bilboActiveWallet = new("Bilbo's Mastercard", "567890", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, "0240123789");
+        Wallet frodoInactiveWallet = new("Frodo's Mtn", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.MTN, "0244123456");
+        Wallet frodoInactiveWallet2 = new("Frodo's Voda", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.VODAFONE, "0204123456");
+        frodoInactiveWallet.DeactivateWallet();
+        frodoInactiveWallet2.DeactivateWallet();
+        var existingWallets = new List<Wallet>()
+        {
+            frodoActiveWallet,
+            frodoInactiveWallet,
+            bilboActiveWallet,
+            frodoInactiveWallet2
+        }.AsQueryable().BuildMockDbSet();
+
+        var contextMock = new Mock<IWalletServiceContext>();
+        contextMock.Setup(x => x.Wallets).Returns(existingWallets.Object).Verifiable(Times.Once);
+
+        var repository = CreateWalletRepository(contextMock);
+
+        var frodoId = "0244123456";
+        // Act
+        var results = await repository.GetWalletsByUserId(frodoId);
+
+        // Assert
+        Assert.NotEmpty(results);
+        Assert.Single(results);
+        Assert.False(results?.Any(x => x.AccountNumber == frodoInactiveWallet.AccountNumber));
+        Assert.False(results?.Any(x => x.AccountNumber == frodoInactiveWallet2.AccountNumber));
+        Assert.Equal(frodoActiveWallet.WalletName, results?.First().WalletName);
+        contextMock.Verify();
+    }
+
+    [Fact]
+    public async Task GetAllWallets_NoActiveWalletsExistForUser_ReturnsEmptyList()
+    {
+        // Arrage
+        Wallet bilboActiveWallet = new("Bilbo's Mastercard", "567890", InternalWalletType.CARD, InternalAccountScheme.MASTERCARD, "0240123789");
+        Wallet frodoInactiveWallet = new("Frodo's Mtn", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.MTN, "0244123456");
+        Wallet frodoInactiveWallet2 = new("Frodo's Voda", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.VODAFONE, "0204123456");
+        frodoInactiveWallet.DeactivateWallet();
+        frodoInactiveWallet2.DeactivateWallet();
+
+        var allWallets = new List<Wallet>()
+        {
+            bilboActiveWallet,
+            frodoInactiveWallet,
+            frodoInactiveWallet2,
+        }.AsQueryable().BuildMockDbSet();
+
+        var contextMock = new Mock<IWalletServiceContext>();
+        contextMock.Setup(x => x.Wallets).Returns(allWallets.Object).Verifiable(Times.Once);
+
+        var repository = CreateWalletRepository(contextMock);
+
+        var frodoId = "0244123456";
+
+        // Act
+        var results = await repository.GetWalletsByUserId(frodoId);
+
+        // Assert
+        Assert.NotNull(results);
+        Assert.Empty(results);
+
+        contextMock.Verify();
+    }
+    #endregion
+
     #region Hepers
 
     private WalletRepository CreateWalletRepository(Mock<IWalletServiceContext>? contextMock = null)
