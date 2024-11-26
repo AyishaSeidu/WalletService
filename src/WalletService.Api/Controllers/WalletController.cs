@@ -12,7 +12,7 @@ using WalletService.Infrastructure.Repository.Interfaces;
 
 namespace WalletService.Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/wallets")]
 [ApiController]
 [ServiceFilter(typeof(ExceptionFilter<WalletController>))]
 
