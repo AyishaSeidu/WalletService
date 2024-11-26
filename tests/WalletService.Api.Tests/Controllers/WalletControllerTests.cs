@@ -332,9 +332,9 @@ public class WalletControllerTests
 
     #endregion
 
-    #region GetWallets
+    #region GetWalletsByUserPhoneNumber
     [Fact]
-    public async void GetWalletsByUserId_RepositoryReturnsListOfWallets_Success()
+    public async void GetWalletsByUserPhoneNumber_RepositoryReturnsListOfWallets_Success()
     {
         // Arrange
         const string userPhoneNumer = "1234567890";
@@ -372,7 +372,7 @@ public class WalletControllerTests
 
 
         // Act 
-        var response = await controller.GetWalletsByUserId(userPhoneNumer) as OkObjectResult;
+        var response = await controller.GetWalletsByUserPhoneNumber(userPhoneNumer) as OkObjectResult;
 
         // Assert
         Assert.NotNull(response);
@@ -389,7 +389,7 @@ public class WalletControllerTests
         repositoryMock.VerifyNoOtherCalls();
     }
     [Fact]
-    public async void GetWalletsByUserId_RepositoryReturnsEmptyListOfWallets_Success()
+    public async void GetWalletsByUserPhoneNumber_RepositoryReturnsEmptyListOfWallets_Success()
     {
         // Arrange
         const string userPhoneNumer = "1234567890";
@@ -404,7 +404,7 @@ public class WalletControllerTests
             logger: loggerMock.Object, mapperMock: mapperMock.Object);
 
         // Act 
-        var response = await controller.GetWalletsByUserId(userPhoneNumer) as OkObjectResult;
+        var response = await controller.GetWalletsByUserPhoneNumber(userPhoneNumer) as OkObjectResult;
 
         // Assert
         Assert.NotNull(response);
@@ -423,7 +423,7 @@ public class WalletControllerTests
 
     [Theory]
     [MemberData(nameof(InvalidUserPhoneNumberWithExpectedException))]
-    public async void GetWalletsByUserId_InvalidUserId_ThrowsArgumentException(string phoneNumber, Exception exception)
+    public async void GetWalletsByUserPhoneNumber_InvalidUserId_ThrowsArgumentException(string phoneNumber, Exception exception)
     {
         // Arrange
         var repositoryMock = new Mock<IWalletRepository>();
@@ -433,7 +433,7 @@ public class WalletControllerTests
             logger: loggerMock.Object, mapperMock: mapperMock.Object);
 
         // Act 
-        await Assert.ThrowsAsync(exception.GetType(), async () => await controller.GetWalletsByUserId(phoneNumber));
+        await Assert.ThrowsAsync(exception.GetType(), async () => await controller.GetWalletsByUserPhoneNumber(phoneNumber));
 
         // Assert
         mapperMock.VerifyNoOtherCalls();
