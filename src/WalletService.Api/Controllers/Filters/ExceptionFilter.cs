@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System.Data.Common;
-using System.Net.Sockets;
 using System.Net;
+using System.Net.Sockets;
 
 namespace WalletService.Api.Controllers.Filters;
 

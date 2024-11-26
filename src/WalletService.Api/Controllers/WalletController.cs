@@ -12,7 +12,7 @@ using WalletService.Infrastructure.Repository.Interfaces;
 
 namespace WalletService.Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/wallets")]
 [ApiController]
 [ServiceFilter(typeof(ExceptionFilter<WalletController>))]
 
@@ -22,36 +22,36 @@ public class WalletController(IWalletRepository walletRepository, IWalletValidat
     [HttpPost]
     public async Task<IActionResult> AddWallet([FromBody] WalletWriteDto wallet)
     {
-        logger.LogInformation($"Wallet Service: Start -> Adding a new wallet for user {wallet.OwnerPhoneNumber}");
+        logger.LogInformation($"WalletService: Start AddWallet-> Adding a new wallet for user {wallet.OwnerPhoneNumber}");
         var validationResult = walletValidator.ValidateWallet(wallet);
         if (validationResult.IsValid == false)
         {
-            logger.LogDebug($"Wallet Service: Stop -> Adding wallet: Invalid request : {validationResult.InvalidReason}");
+            logger.LogDebug($"WalletService: Stop AddWallet-> Invalid request : {validationResult.InvalidReason}");
             throw new ArgumentException(validationResult.InvalidReason);
         }
         var walletToAdd = new Wallet(wallet.WalletName, wallet.AccountNumber, GetInternalWalletType(wallet.WalletType), GetInternalAccountScheme(wallet.AccountScheme), wallet.OwnerPhoneNumber);
-        logger.LogInformation($"WalletService: -> New wallet validated, saving wallet for user {walletToAdd.Owner}");
+        logger.LogInformation($"WalletService:  AddWallet -> New wallet validated, saving wallet for user {walletToAdd.Owner}");
 
         var walletAdded = await walletRepository.AddWallet(walletToAdd);
 
-        logger.LogInformation($"Wallet Service: End -> New wallet: {walletAdded.Id} added for user {walletAdded.Owner}");
-        return CreatedAtAction(nameof(GetWalletById), new { id = walletAdded.Id}, mapper.Map<WalletReadDto>(walletAdded));
+        logger.LogInformation($"WalletService: End AddWallet -> New wallet: {walletAdded.Id} added for user {walletAdded.Owner}");
+        return CreatedAtAction(nameof(GetWalletById), new { id = walletAdded.Id }, mapper.Map<WalletReadDto>(walletAdded));
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetWalletById(int id)
     {
-        logger.LogInformation($"WalletService: Start -> Retrieving wallet: {id}");
+        logger.LogInformation($"WalletService: Start GetWalletById -> Retrieving wallet: {id}");
 
         ArgumentOutOfRangeException.ThrowIfLessThan(id, 1);
         var wallet = await walletRepository.GetWalletById(id);
 
         if (wallet is null)
         {
-            logger.LogInformation($"WalletService: End -> Retrieving wallet: {id}, wallet not found");
+            logger.LogInformation($"WalletService: End GetWalletById -> Wallet Id: {id}, not found");
             return NotFound($"Wallet with id: {id} not found");
         }
-        logger.LogInformation($"WalletService: End -> Retrieving wallet: {id}");
+        logger.LogInformation($"WalletService: End GetWalletById -> Retrieved wallet: {id}");
 
         return Ok(mapper.Map<WalletReadDto>(wallet));
     }
@@ -77,17 +77,17 @@ public class WalletController(IWalletRepository walletRepository, IWalletValidat
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteWallet(int id)
     {
-        logger.LogInformation($"WalletService: Start -> Deleting wallet: {id}");
+        logger.LogInformation($"WalletService: Start DeleteWallet -> Deleting wallet: {id}");
 
         ArgumentOutOfRangeException.ThrowIfLessThan(id, 1);
         var deletedWallet = await walletRepository.MarkAsDeleted(id);
 
         if (deletedWallet is null)
         {
-            logger.LogInformation($"WalletService: End -> Deleting wallet: {id}, wallet not found");
+            logger.LogInformation($"WalletService: End DeleteWallet -> Wallet Id: {id}, wallet not found");
             return NotFound($"Wallet with id: {id} not found");
         }
-        logger.LogInformation($"WalletService: End -> Deleting wallet: {id}");
+        logger.LogInformation($"WalletService: End DeleteWallet -> Deleted wallet: {id}");
         return Ok(mapper.Map<WalletReadDto>(deletedWallet));
     }
     private static InternalWalletType GetInternalWalletType(WalletType externalWalletType)

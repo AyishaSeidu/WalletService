@@ -199,7 +199,7 @@ public class WalletValidatorTests
                 AccountNumber = "123456",
                 WalletType = WalletType.CARD,
                 AccountScheme = AccountScheme.MASTERCARD,
-                OwnerPhoneNumber = "233244000000" 
+                OwnerPhoneNumber = "233244000000"
             },
             new ValidationResult(true)
         },
@@ -210,7 +210,7 @@ public class WalletValidatorTests
                 AccountNumber = "123456",
                 WalletType = WalletType.CARD,
                 AccountScheme = AccountScheme.VISA,
-                OwnerPhoneNumber = "233244000000" 
+                OwnerPhoneNumber = "233244000000"
             },
             new ValidationResult(true)
         },
@@ -221,7 +221,7 @@ public class WalletValidatorTests
                 AccountNumber = "0266123456",
                 WalletType = WalletType.MOMO,
                 AccountScheme = AccountScheme.AIRTELTIGO,
-                OwnerPhoneNumber = "233244000000" 
+                OwnerPhoneNumber = "233244000000"
             },
             new ValidationResult(true)
         },
@@ -232,7 +232,7 @@ public class WalletValidatorTests
                 AccountNumber = "0244123456",
                 WalletType = WalletType.MOMO,
                 AccountScheme = AccountScheme.MTN,
-                OwnerPhoneNumber = "233244000000" 
+                OwnerPhoneNumber = "233244000000"
             },
             new ValidationResult(true)
         },
@@ -243,7 +243,7 @@ public class WalletValidatorTests
                 AccountNumber = "0200123456",
                 WalletType = WalletType.MOMO,
                 AccountScheme = AccountScheme.VODAFONE,
-                OwnerPhoneNumber = "233244000000" 
+                OwnerPhoneNumber = "233244000000"
             },
             new ValidationResult(true)
         },

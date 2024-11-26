@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using WalletService.Api.Controllers;
 using Moq;
-using WalletService.Api.Controllers.Filters;
 using System.Data.Common;
 using System.Net.Sockets;
-using Microsoft.AspNetCore.Routing;
+using WalletService.Api.Controllers;
+using WalletService.Api.Controllers.Filters;
 namespace WalletService.Api.Tests.Controllers.Filters;
 
 public class ExceptionFilterTests

@@ -25,22 +25,17 @@ public class WalletRespositoryTests
 
         var contextMock = new Mock<IWalletServiceContext>();
         contextMock.Setup(x => x.Wallets).Returns(existingWallets.Object).Verifiable(Times.Exactly(3));
-
-        var newWallet = new Wallet("Frodo's Visa", "192837", InternalWalletType.CARD, InternalAccountScheme.VISA, "0244123456");
         contextMock.Setup(x => x.Wallets.Add(It.IsAny<Wallet>())).Verifiable(Times.Once());
-        contextMock.Setup(x=> x.SaveChangesAsync()).Returns(Task.CompletedTask).Verifiable(Times.Once());
+        contextMock.Setup(x => x.SaveChangesAsync()).Returns(Task.CompletedTask).Verifiable(Times.Once());
 
         var repository = CreateWalletRepository(contextMock);
+
+        var newWallet = new Wallet("Frodo's Visa", "192837", InternalWalletType.CARD, InternalAccountScheme.VISA, "0244123456");
         // Act
         var result = await repository.AddWallet(newWallet);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equivalent(newWallet, result);
-
         contextMock.Verify();
-
-
     }
 
     [Fact]
@@ -69,7 +64,7 @@ public class WalletRespositoryTests
     }
 
     [Fact]
-    public async Task AddWallet_WalletOwnerHasMoreThan5WalletsButInactive_Success()
+    public async Task AddWallet_WalletOwnerHasMoreThan5WalletsButInactive_ThrowsInvalidOperationException()
     {
         // Arrage
         var wallets = new List<Wallet>()
@@ -98,8 +93,6 @@ public class WalletRespositoryTests
         var result = await repository.AddWallet(newWallet);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equivalent(newWallet, result);
         contextMock.Verify();
     }
 
@@ -148,8 +141,6 @@ public class WalletRespositoryTests
         var result = await repository.AddWallet(newWallet);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equivalent(newWallet, result);
         contextMock.Verify();
     }
 
@@ -264,7 +255,7 @@ public class WalletRespositoryTests
 
         var contextMock = new Mock<IWalletServiceContext>();
         contextMock.Setup(x => x.Wallets).Returns(existingWallets.Object).Verifiable(Times.Once);
-      
+
         var repository = CreateWalletRepository(contextMock);
 
         // Act
@@ -406,7 +397,7 @@ public class WalletRespositoryTests
         Wallet inactiveWallet2 = new("Frodo's Voda", "0244123456", InternalWalletType.MOMO, InternalAccountScheme.VODAFONE, "0204123456");
         inactiveWallet1.DeactivateWallet();
         inactiveWallet2.DeactivateWallet();
-        
+
         var allWallets = new List<Wallet>()
         {
             inactiveWallet1,

@@ -16,7 +16,7 @@ public class WalletValidator : IWalletValidator
         {
             return new ValidationResult(false, InvalidReasons.InvalidWalletName);
         }
-        if(string.IsNullOrWhiteSpace(wallet.OwnerPhoneNumber))
+        if (string.IsNullOrWhiteSpace(wallet.OwnerPhoneNumber))
         {
             return new ValidationResult(false, InvalidReasons.EmptyWalletOwnerNumber);
         }
