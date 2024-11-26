@@ -41,6 +41,13 @@ public class WalletRepository(IWalletServiceContext context) : IWalletRepository
     }
 
     /// <inheritdoc />
+    public async Task<IEnumerable<Wallet>> GetWalletsByUserId(string userId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(userId, nameof(userId));
+        return await context.Wallets.Where(x => x.Owner == userId && x.IsActive).ToListAsync();
+    }
+
+    /// <inheritdoc />
     public async Task<Wallet> MarkAsDeleted(int walletId)
     {
         var walletToDelete = await context.Wallets.FirstOrDefaultAsync(x => x.Id == walletId && x.IsActive);
